@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import socket from "../../socket/socket";
 import { Header, PageTransition } from "../../components/admin/layout";
 import { Plus } from "lucide-react";
 import JobForm from "./forms/JobForm";
@@ -57,6 +58,35 @@ const DeveloperJobPosting = () => {
 
   useEffect(() => {
     fetchJobs();
+  }, []);
+
+  // WebSocket listeners for real-time job postings
+  useEffect(() => {
+    const handleNewJob = (newJob) => {
+      setJobs((prev) => {
+        const exists = prev.some((j) => j._id === newJob._id);
+        if (exists) return prev;
+        return [newJob, ...prev];
+      });
+    };
+
+    const handleJobEdited = (editedJob) => {
+      setJobs((prev) => prev.map((j) => (j._id === editedJob._id ? editedJob : j)));
+    };
+
+    const handleJobDeleted = (deletedJobId) => {
+      setJobs((prev) => prev.filter((j) => j._id !== deletedJobId));
+    };
+
+    socket.on("new_job", handleNewJob);
+    socket.on("jobEdited", handleJobEdited);
+    socket.on("jobDeleted", handleJobDeleted);
+
+    return () => {
+      socket.off("new_job", handleNewJob);
+      socket.off("jobEdited", handleJobEdited);
+      socket.off("jobDeleted", handleJobDeleted);
+    };
   }, []);
 
   const handleJobSubmitSuccess = (newJob) => {

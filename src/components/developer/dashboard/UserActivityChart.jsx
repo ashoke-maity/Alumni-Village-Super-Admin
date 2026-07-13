@@ -84,8 +84,19 @@ const UserActivityChart = () => {
   const palette = ['#4472C4', '#ED7D31'];
 
   return (
-    <div className="bg-white rounded-lg shadow-sm p-4">
-      <h3 className="text-lg font-semibold mb-4">User Activity</h3>
+    <div style={{ background: '#fff', borderRadius: '16px', boxShadow: '0 4px 24px rgba(0,0,0,0.07)', border: '1px solid rgba(0,0,0,0.06)', overflow: 'hidden' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '18px 22px', borderBottom: '1px solid #f1f5f9' }}>
+        <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'linear-gradient(135deg, #dc2626 0%, #f87171 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+        </div>
+        <div>
+          <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 700, color: '#0f172a' }}>User Activity</h3>
+          <p style={{ margin: 0, fontSize: '11px', color: '#94a3b8' }}>Registrations &amp; logins over time</p>
+        </div>
+      </div>
+      <div style={{ padding: '16px 8px' }}>
 
       {loading ? (
         <div className="animate-pulse flex flex-col space-y-3">
@@ -125,6 +136,7 @@ const UserActivityChart = () => {
           </SeriesCollectionDirective>
         </ChartComponent>
       )}
+      </div>
     </div>
   );
 };

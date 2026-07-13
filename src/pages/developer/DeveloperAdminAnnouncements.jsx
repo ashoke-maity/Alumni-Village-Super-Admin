@@ -5,6 +5,7 @@ import { Megaphone, Plus, Trash, ExternalLink, Edit } from 'lucide-react';
 import axios from 'axios';
 import { Button, Skeleton } from '../../components/shared';
 import { Toast } from '../../utils';
+import socket from '../../socket/socket';
 
 const DeveloperAdminAnnouncements = () => {
     const navigate = useNavigate();
@@ -26,6 +27,39 @@ const DeveloperAdminAnnouncements = () => {
     // Fetch announcements
     useEffect(() => {
         fetchAnnouncements();
+    }, []);
+
+    // WebSocket listeners for real-time announcements
+    useEffect(() => {
+        const handleNewAnnouncement = (ann) => {
+            if (ann.target === 'admin') {
+                setAnnouncements((prev) => {
+                    const exists = prev.some((a) => a._id === ann._id);
+                    if (exists) return prev;
+                    return [ann, ...prev];
+                });
+            }
+        };
+
+        const handleAnnouncementEdited = (editedAnn) => {
+            if (editedAnn.target === 'admin') {
+                setAnnouncements((prev) => prev.map((a) => (a._id === editedAnn._id ? editedAnn : a)));
+            }
+        };
+
+        const handleAnnouncementDeleted = (id) => {
+            setAnnouncements((prev) => prev.filter((a) => a._id !== id));
+        };
+
+        socket.on("newAnnouncement", handleNewAnnouncement);
+        socket.on("announcementEdited", handleAnnouncementEdited);
+        socket.on("announcementDeleted", handleAnnouncementDeleted);
+
+        return () => {
+            socket.off("newAnnouncement", handleNewAnnouncement);
+            socket.off("announcementEdited", handleAnnouncementEdited);
+            socket.off("announcementDeleted", handleAnnouncementDeleted);
+        };
     }, []);
 
     const fetchAnnouncements = async () => {

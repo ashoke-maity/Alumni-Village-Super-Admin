@@ -5,6 +5,9 @@ import JobOpeningsChart from './JobOpeningsChart';
 import EventsChart from './EventsChart';
 import StoriesOverview from './StoriesOverview';
 import DeveloperAnnouncementsView from './DeveloperAnnouncementsView';
+import QuickActions from './QuickActions';
+import UserActivityPanel from './UserActivityPanel';
+import AdminSummaryPanel from './AdminSummaryPanel';
 
 export {
   DeveloperStats,
@@ -13,5 +16,8 @@ export {
   JobOpeningsChart,
   EventsChart,
   StoriesOverview,
-  DeveloperAnnouncementsView
-}; 
+  DeveloperAnnouncementsView,
+  QuickActions,
+  UserActivityPanel,
+  AdminSummaryPanel,
+};

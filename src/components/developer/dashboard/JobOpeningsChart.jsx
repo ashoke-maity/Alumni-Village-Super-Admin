@@ -104,32 +104,34 @@ const JobOpeningsChart = () => {
   const palette = ['#5E81F4', '#8676FF', '#FF9066', '#F7B84B', '#13D8AA'];
 
   return (
-    <div className="bg-white rounded-lg shadow-sm p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-semibold">Job Openings by Category</h3>
-        <Link
-          to={`${developerRoute}/developer/dashboard/jobs`}
-          className="text-red-500 text-sm hover:underline flex items-center"
-        >
+    <div style={{ background: '#fff', borderRadius: '16px', boxShadow: '0 4px 24px rgba(0,0,0,0.07)', border: '1px solid rgba(0,0,0,0.06)', overflow: 'hidden' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 22px', borderBottom: '1px solid #f1f5f9' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2" y="7" width="20" height="14" rx="2"/>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+            </svg>
+          </div>
+          <div>
+            <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 700, color: '#0f172a' }}>Jobs by Category</h3>
+            <p style={{ margin: 0, fontSize: '11px', color: '#94a3b8' }}>Distribution of open positions</p>
+          </div>
+        </div>
+        <Link to={`${developerRoute}/developer/dashboard/jobs`} style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#7c3aed', fontSize: '12px', fontWeight: 600, textDecoration: 'none', padding: '5px 10px', borderRadius: '8px', background: '#faf5ff', border: '1px solid #ddd6fe' }}>
           Manage Jobs
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </Link>
       </div>
-
+      <div style={{ padding: '16px 8px' }}>
       {loading ? (
-        <div className="animate-pulse flex flex-col space-y-3">
-          <div className="bg-gray-200 h-60 w-full rounded"></div>
-        </div>
+        <div style={{ padding: '16px' }}><div style={{ height: '260px', background: 'linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%)', borderRadius: '8px', backgroundSize: '200% 100%', animation: 'shimmer 1.5s infinite' }} /><style>{`@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}`}</style></div>
       ) : error ? (
-        <div className="h-60 flex items-center justify-center text-red-500 bg-red-50 rounded-lg">
-          <p>{error}</p>
-        </div>
+        <div style={{ height: '240px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#dc2626', background: '#fff1f2', borderRadius: '8px', margin: '16px' }}><p>{error}</p></div>
       ) : (
         <>
-          <div className="mb-3 text-center">
-            <span className="text-sm text-gray-500">Total Jobs: {totalJobs}</span>
+          <div style={{ textAlign: 'center', marginBottom: '4px' }}>
+            <span style={{ fontSize: '12px', color: '#94a3b8', fontWeight: 500 }}>Total Jobs: <strong style={{ color: '#0f172a' }}>{totalJobs}</strong></span>
           </div>
           <AccumulationChartComponent
             id="job-categories-chart"
@@ -156,44 +158,7 @@ const JobOpeningsChart = () => {
           </AccumulationChartComponent>
         </>
       )}
-
-      {/* Job Details Table */}
-      {jobs.length > 0 && (
-        <div className="overflow-x-auto mt-6">
-          <table className="min-w-full text-sm text-left border rounded-lg">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="px-3 py-2">Title</th>
-                <th className="px-3 py-2">Company</th>
-                <th className="px-3 py-2">Type</th>
-                <th className="px-3 py-2">Location</th>
-                <th className="px-3 py-2">Deadline</th>
-                <th className="px-3 py-2">Posted</th>
-                <th className="px-3 py-2">Logo</th>
-              </tr>
-            </thead>
-            <tbody>
-              {jobs.map(job => (
-                <tr key={job._id} className="border-b hover:bg-gray-50">
-                  <td className="px-3 py-2 font-medium">{job.jobTitle}</td>
-                  <td className="px-3 py-2">{job.companyName}</td>
-                  <td className="px-3 py-2">{job.jobType}</td>
-                  <td className="px-3 py-2">{job.location}</td>
-                  <td className="px-3 py-2">{job.deadline ? new Date(job.deadline).toLocaleDateString() : '-'}</td>
-                  <td className="px-3 py-2">{job.createdAt ? new Date(job.createdAt).toLocaleDateString() : '-'}</td>
-                  <td className="px-3 py-2">
-                    {job.logo ? (
-                      <img src={job.logo} alt="logo" className="w-16 h-10 object-contain rounded" />
-                    ) : (
-                      <span className="text-gray-400">-</span>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+      </div>
     </div>
   );
 };

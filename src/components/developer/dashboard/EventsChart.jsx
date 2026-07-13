@@ -144,32 +144,34 @@ const EventsChart = () => {
   const palette = ['#0096FF', '#FF7F50', '#77DD77', '#B19CD9'];
 
   return (
-    <div className="bg-white rounded-lg shadow-sm p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-semibold">Events by Month</h3>
-        <Link
-          to={`${developerRoute}/developer/dashboard/events`}
-          className="text-red-500 text-sm hover:underline flex items-center"
-        >
+    <div style={{ background: '#fff', borderRadius: '16px', boxShadow: '0 4px 24px rgba(0,0,0,0.07)', border: '1px solid rgba(0,0,0,0.06)', overflow: 'hidden' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 22px', borderBottom: '1px solid #f1f5f9' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'linear-gradient(135deg, #0891b2 0%, #22d3ee 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </div>
+          <div>
+            <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 700, color: '#0f172a' }}>Events by Month</h3>
+            <p style={{ margin: 0, fontSize: '11px', color: '#94a3b8' }}>Last 6 months breakdown</p>
+          </div>
+        </div>
+        <Link to={`${developerRoute}/developer/dashboard/events`} style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#0891b2', fontSize: '12px', fontWeight: 600, textDecoration: 'none', padding: '5px 10px', borderRadius: '8px', background: '#ecfeff', border: '1px solid #a5f3fc' }}>
           Manage Events
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </Link>
       </div>
-
+      <div style={{ padding: '16px 8px' }}>
       {loading ? (
-        <div className="animate-pulse flex flex-col space-y-3">
-          <div className="bg-gray-200 h-60 w-full rounded"></div>
-        </div>
+        <div style={{ padding: '16px' }}><div style={{ height: '260px', background: 'linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%)', borderRadius: '8px', backgroundSize: '200% 100%', animation: 'shimmer 1.5s infinite' }} /><style>{`@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}`}</style></div>
       ) : error ? (
-        <div className="h-60 flex items-center justify-center text-red-500 bg-red-50 rounded-lg">
-          <p>{error}</p>
-        </div>
+        <div style={{ height: '240px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#dc2626', background: '#fff1f2', borderRadius: '8px', margin: '16px' }}><p>{error}</p></div>
       ) : (
         <>
-          <div className="mb-2 text-center">
-            <span className="text-sm text-gray-500">Total Events: {totalEvents}</span>
+          <div style={{ textAlign: 'center', marginBottom: '4px' }}>
+            <span style={{ fontSize: '12px', color: '#94a3b8', fontWeight: 500 }}>Total Events: <strong style={{ color: '#0f172a' }}>{totalEvents}</strong></span>
           </div>
           <ChartComponent
             id="events-chart"
@@ -230,46 +232,7 @@ const EventsChart = () => {
           </ChartComponent>
         </>
       )}
-
-      {/* Event Details Table */}
-      {allEvents.length > 0 && (
-        <div className="overflow-x-auto mt-6">
-          <table className="min-w-full text-sm text-left border rounded-lg">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="px-3 py-2">Name</th>
-                <th className="px-3 py-2">Date</th>
-                <th className="px-3 py-2">Location</th>
-                <th className="px-3 py-2">Summary</th>
-                <th className="px-3 py-2">Description</th>
-                <th className="px-3 py-2">Media</th>
-              </tr>
-            </thead>
-            <tbody>
-              {allEvents.map(event => (
-                <tr key={event._id} className="border-b hover:bg-gray-50">
-                  <td className="px-3 py-2 font-medium">{event.eventName}</td>
-                  <td className="px-3 py-2">{event.eventDate ? new Date(event.eventDate).toLocaleDateString() : '-'}</td>
-                  <td className="px-3 py-2">{event.eventLocation}</td>
-                  <td className="px-3 py-2">{event.eventSummary}</td>
-                  <td className="px-3 py-2 max-w-xs truncate" title={event.eventDescription}>{event.eventDescription}</td>
-                  <td className="px-3 py-2">
-                    {event.mediaUrl ? (
-                      event.mediaResourceType === 'video' ? (
-                        <video src={event.mediaUrl} controls className="w-20 h-12 object-cover rounded" />
-                      ) : (
-                        <img src={event.mediaUrl} alt="event media" className="w-20 h-12 object-cover rounded" />
-                      )
-                    ) : (
-                      <span className="text-gray-400">-</span>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+      </div>
     </div>
   );
 };

@@ -10,6 +10,7 @@ import { cn, formatDate } from "../../../utils/helpers";
 import { Skeleton } from "../../shared";
 import Toast from "../../../utils/toast";
 import axios from "axios";
+import socket from '../../../socket/socket';
 import { Pencil, Trash2 } from "lucide-react";
 import EditUserModal from './EditUserModal';
 
@@ -36,6 +37,90 @@ export default function ManageUsersTable({ apiUrl = import.meta.env.VITE_ADMIN_A
   useEffect(() => {
     fetchUsers();
   }, []);
+
+  // WebSocket listeners for real-time user updates
+  useEffect(() => {
+    const handleUserRegistered = (newUser) => {
+      const formatted = {
+        id: newUser._id,
+        name: `${newUser.FirstName} ${newUser.LastName}`,
+        email: newUser.Email,
+        joinedAt: new Date(newUser.createdAt).toISOString().split("T")[0],
+        createdAt: newUser.createdAt,
+        updatedAt: newUser.updatedAt ? new Date(newUser.updatedAt).toISOString() : null,
+        status: newUser.Role || "user",
+        plainPassword: newUser.plainPassword,
+        permissions: newUser.permissions || {
+          create: false,
+          read: true,
+          update: false,
+          delete: false,
+        },
+        isGoogleUser: newUser.isGoogleUser,
+        profilePic: newUser.isGoogleUser && newUser.profileImage ? newUser.profileImage : (newUser.profileImage && newUser.profileImage.trim() !== ''
+          ? (newUser.profileImage.startsWith('http')
+            ? newUser.profileImage
+            : `${apiUrl.replace(/\/$/, '')}/${newUser.profileImage.replace(/^\//, '')}`)
+          : null),
+      };
+
+      setUsers((prev) => {
+        const exists = prev.some((u) => u.id === formatted.id);
+        if (exists) return prev;
+        return [formatted, ...prev];
+      });
+      setFilteredUsers((prev) => {
+        const exists = prev.some((u) => u.id === formatted.id);
+        if (exists) return prev;
+        return [formatted, ...prev];
+      });
+    };
+
+    const handleUserUpdated = (updatedUser) => {
+      const formatted = {
+        id: updatedUser._id,
+        name: `${updatedUser.FirstName} ${updatedUser.LastName}`,
+        email: updatedUser.Email,
+        joinedAt: new Date(updatedUser.createdAt).toISOString().split("T")[0],
+        createdAt: updatedUser.createdAt,
+        updatedAt: updatedUser.updatedAt ? new Date(updatedUser.updatedAt).toISOString() : null,
+        status: updatedUser.Role || "user",
+        plainPassword: updatedUser.plainPassword,
+        permissions: updatedUser.permissions || {
+          create: false,
+          read: true,
+          update: false,
+          delete: false,
+        },
+        isGoogleUser: updatedUser.isGoogleUser,
+        profilePic: updatedUser.isGoogleUser && updatedUser.profileImage ? updatedUser.profileImage : (updatedUser.profileImage && updatedUser.profileImage.trim() !== ''
+          ? (updatedUser.profileImage.startsWith('http')
+            ? updatedUser.profileImage
+            : `${apiUrl.replace(/\/$/, '')}/${updatedUser.profileImage.replace(/^\//, '')}`)
+          : null),
+      };
+
+      const updateFunc = (u) => (u.id === formatted.id ? formatted : u);
+      setUsers((prev) => prev.map(updateFunc));
+      setFilteredUsers((prev) => prev.map(updateFunc));
+    };
+
+    const handleUserDeleted = (deletedUserId) => {
+      const filterFunc = (u) => u.id !== deletedUserId;
+      setUsers((prev) => prev.filter(filterFunc));
+      setFilteredUsers((prev) => prev.filter(filterFunc));
+    };
+
+    socket.on("userRegistered", handleUserRegistered);
+    socket.on("userUpdated", handleUserUpdated);
+    socket.on("userDeleted", handleUserDeleted);
+
+    return () => {
+      socket.off("userRegistered", handleUserRegistered);
+      socket.off("userUpdated", handleUserUpdated);
+      socket.off("userDeleted", handleUserDeleted);
+    };
+  }, [apiUrl]);
 
   const fetchUsers = async () => {
     setIsLoading(true);

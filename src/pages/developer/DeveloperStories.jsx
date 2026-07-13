@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import axios from 'axios'
+import socket from '../../socket/socket'
 import { Header, PageTransition } from '../../components/admin/layout'
 import { Plus } from 'lucide-react'
 import StoryForm from "./forms/StoryForm"
@@ -92,6 +93,35 @@ const DeveloperStories = () => {
   useEffect(() => {
     fetchStories()
   }, [])
+
+  // WebSocket listeners for real-time stories
+  useEffect(() => {
+    const handleNewStory = (newStory) => {
+      setStories((prev) => {
+        const exists = prev.some((s) => s._id === newStory._id);
+        if (exists) return prev;
+        return [newStory, ...prev];
+      });
+    };
+
+    const handleStoryEdited = (editedStory) => {
+      setStories((prev) => prev.map((s) => (s._id === editedStory._id ? editedStory : s)));
+    };
+
+    const handleStoryDeleted = (deletedStoryId) => {
+      setStories((prev) => prev.filter((s) => s._id !== deletedStoryId));
+    };
+
+    socket.on("new_story", handleNewStory);
+    socket.on("storyEdited", handleStoryEdited);
+    socket.on("storyDeleted", handleStoryDeleted);
+
+    return () => {
+      socket.off("new_story", handleNewStory);
+      socket.off("storyEdited", handleStoryEdited);
+      socket.off("storyDeleted", handleStoryDeleted);
+    };
+  }, []);
 
   const handleAddStoryClick = () => {
     navigate(`${developerRoute}/developer/dashboard/addStories`)

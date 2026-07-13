@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import socket from "../../socket/socket";
 import { Header, PageTransition } from "../../components/admin/layout";
 import { Plus } from "lucide-react";
 import EventForm from "./forms/EventForm";
@@ -54,6 +55,35 @@ const DeveloperEvents = () => {
 
   useEffect(() => {
     fetchEvents();
+  }, []);
+
+  // WebSocket listeners for real-time events
+  useEffect(() => {
+    const handleNewEvent = (newEvent) => {
+      setEvents((prev) => {
+        const exists = prev.some((e) => e._id === newEvent._id);
+        if (exists) return prev;
+        return [newEvent, ...prev];
+      });
+    };
+
+    const handleEventEdited = (editedEvent) => {
+      setEvents((prev) => prev.map((e) => (e._id === editedEvent._id ? editedEvent : e)));
+    };
+
+    const handleEventDeleted = (deletedEventId) => {
+      setEvents((prev) => prev.filter((e) => e._id !== deletedEventId));
+    };
+
+    socket.on("new_event", handleNewEvent);
+    socket.on("eventEdited", handleEventEdited);
+    socket.on("eventDeleted", handleEventDeleted);
+
+    return () => {
+      socket.off("new_event", handleNewEvent);
+      socket.off("eventEdited", handleEventEdited);
+      socket.off("eventDeleted", handleEventDeleted);
+    };
   }, []);
 
   const handleEventSubmitSuccess = (newEvent) => {
