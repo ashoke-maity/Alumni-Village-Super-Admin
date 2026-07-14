@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import axios from 'axios';
+import axios from "../../apis/axios";
 import { toast } from 'react-toastify';
 import LoadingScreen from '../common/LoadingScreen';
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axios from "../../../apis/axios";
 
 const EventForm = ({ onSubmitSuccess }) => {
   const [eventData, setEventData] = useState({

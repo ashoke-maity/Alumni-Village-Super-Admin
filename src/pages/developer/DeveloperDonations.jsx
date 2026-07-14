@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Header, PageTransition } from '../../components/admin/layout';
-import Grid7 from '../../components/admin/AllDonations';
+import { Header, PageTransition } from '../../components/layout';
+import Grid7 from '../../components/dashboard/AllDonations';
 
 const DeveloperDonations = () => {
   const location = useLocation();

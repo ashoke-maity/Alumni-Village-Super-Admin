@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "../../apis/axios";
 import { jwtDecode } from "jwt-decode";
 import { User, Lock, Eye, EyeOff, Mail } from "lucide-react";
 import LoadingOverlay from "../../components/shared/LoadingOverlay";
-import Toast from "../../services/toast";
+import Toast from "../../utils/toast";
 
 function DeveloperLogin() {
     const navigate = useNavigate();

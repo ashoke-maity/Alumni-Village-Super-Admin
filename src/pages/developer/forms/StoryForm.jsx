@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "../../../apis/axios";
 
 const StoryForm = ({ story, editMode, onSubmitSuccess, onCancel }) => {
   const [storyData, setStoryData] = useState({

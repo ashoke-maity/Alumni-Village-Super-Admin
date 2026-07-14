@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Header, PageTransition } from '../../components/admin/layout';
+import axios from "../../apis/axios";
+import { Header, PageTransition } from '../../components/layout';
 import { useLocation } from 'react-router-dom';
 
 const DeveloperList = () => {

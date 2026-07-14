@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
+import axios from "../../apis/axios";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
 import { UserPlus, MailCheck, Shield, CheckCircle, Sparkles, LogIn, User, ChevronDown, AlertCircle, Upload, Plus, X, Mail, Phone, MapPin, Calendar, Briefcase, GraduationCap, Award, FileText } from "lucide-react";

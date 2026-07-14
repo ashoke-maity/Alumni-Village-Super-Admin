@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Header, PageTransition } from "../../components/admin/layout";
-import { ManageUsersTable } from "../../components/admin/users";
-import axios from 'axios';
+import { Header, PageTransition } from "../../components/layout";
+import { ManageUsersTable } from "../../components/users";
+import axios from "../../apis/axios";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { Plus, X, Users, FileText, Mail, Trash2, BarChart2 } from "lucide-react";
 import Toast from "../../utils/toast";

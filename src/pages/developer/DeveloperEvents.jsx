@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import axios from "axios";
+import axios from "../../apis/axios";
 import socket from "../../socket/socket";
-import { Header, PageTransition } from "../../components/admin/layout";
+import { Header, PageTransition } from "../../components/layout";
 import { Plus } from "lucide-react";
 import EventForm from "./forms/EventForm";
 

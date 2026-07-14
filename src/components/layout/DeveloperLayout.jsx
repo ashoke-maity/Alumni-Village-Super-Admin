@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import Sidebar from '../developer/layout/Sidebar';
-import MobileSidebar from '../developer/layout/MobileSidebar';
+import Sidebar from "./Sidebar";
+import MobileSidebar from "./MobileSidebar";
 
 const DeveloperLayout = () => {
     const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);

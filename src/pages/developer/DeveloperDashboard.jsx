@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { PageTransition } from "../../components/admin/layout";
+import { PageTransition } from "../../components/layout";
 import {
   DeveloperStats,
   UserActivityChart,
@@ -11,8 +11,8 @@ import {
   QuickActions,
   UserActivityPanel,
   AdminSummaryPanel,
-} from "../../components/developer/dashboard";
-import axios from "axios";
+} from "../../components/dashboard";
+import axios from "../../apis/axios";
 import socket from "../../socket/socket";
 
 function DeveloperDashboard() {

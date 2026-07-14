@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Header, PageTransition } from '../../components/admin/layout';
+import { Header, PageTransition } from '../../components/layout';
 import { Megaphone, Plus, Trash, ExternalLink, Edit } from 'lucide-react';
-import axios from 'axios';
+import axios from "../../apis/axios";
 import { Button, Skeleton } from '../../components/shared';
 import { Toast } from '../../utils';
 import socket from '../../socket/socket';
@@ -136,7 +136,11 @@ const DeveloperAdminAnnouncements = () => {
                 if (res.status === 201 || res.status === 200) {
                     Toast.success("Announcement posted for Admins");
                     setShowForm(false);
-                    setAnnouncements(prev => [res.data.announcement, ...prev]);
+                    setAnnouncements(prev => {
+                        const exists = prev.some(a => a._id === res.data.announcement._id);
+                        if (exists) return prev;
+                        return [res.data.announcement, ...prev];
+                    });
                     resetForm();
                 }
             }

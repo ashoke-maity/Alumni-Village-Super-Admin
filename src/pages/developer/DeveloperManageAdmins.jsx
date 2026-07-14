@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Header, PageTransition } from "../../components/admin/layout";
-import axios from 'axios';
+import { Header, PageTransition } from "../../components/layout";
+import axios from "../../apis/axios";
 import { Plus, X, Trash2, Mail, KeyRound, Search, ChevronDown, Shield, ShieldOff, Clock, UserPlus } from "lucide-react";
 import Toast from "../../utils/toast";
 import { cn } from "../../utils/helpers";
